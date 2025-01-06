@@ -28,4 +28,4 @@ const CategoriesScreen: FC<TCategoriesScreenProps> = ({ navigation }) => {
   );
 };
 
-export { CategoriesScreen };
+export default CategoriesScreen;
