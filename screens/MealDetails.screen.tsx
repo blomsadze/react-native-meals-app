@@ -4,6 +4,9 @@ import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { IconButton, List, MealDetails, Subtitle } from "../components";
 import { IMeal } from "../models/meal";
 import { MEALS } from "../data/mockup";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { addFavorite, removeFavorite } from "../store/favorites";
 
 type TMealDetailsScreenProps = {
   route: {
@@ -20,12 +23,23 @@ const MealDetailsScreen: FC<TMealDetailsScreenProps> = ({
 }) => {
   const { mealId } = route.params;
 
+  const favoriteMealIds = useSelector(
+    (state: RootState) => state.favoriteMeals.ids
+  );
+  const dispatch = useDispatch();
+
+  const isMealFavorite = favoriteMealIds.includes(mealId);
+
   const currentMeal = useMemo<IMeal>(() => {
     return MEALS.find((meal) => meal.id === mealId);
   }, [mealId]);
 
-  const headerButtonPressHandler = () => {
-    // Add your logic here
+  const changeFavoriteStatushandler = () => {
+    if (isMealFavorite) {
+      dispatch(removeFavorite({ id: mealId }));
+    } else {
+      dispatch(addFavorite({ id: mealId }));
+    }
   };
 
   useLayoutEffect(() => {
@@ -34,16 +48,16 @@ const MealDetailsScreen: FC<TMealDetailsScreenProps> = ({
         return (
           <IconButton
             icon="star"
-            color="white"
-            onPress={headerButtonPressHandler}
+            color={isMealFavorite ? "orange" : "white"}
+            onPress={changeFavoriteStatushandler}
           />
         );
       },
     });
-  }, []);
+  }, [isMealFavorite]);
 
   return (
-    <ScrollView style={styles.root}>
+    <ScrollView>
       <Image style={styles.image} source={{ uri: currentMeal?.imageUrl }} />
       <Text style={styles.title}>{currentMeal?.title}</Text>
       <MealDetails
@@ -66,9 +80,6 @@ const MealDetailsScreen: FC<TMealDetailsScreenProps> = ({
 export default MealDetailsScreen;
 
 const styles = StyleSheet.create({
-  root: {
-    marginBottom: 32,
-  },
   image: {
     width: "100%",
     borderTopLeftRadius: 8,

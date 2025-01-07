@@ -1,7 +1,5 @@
 import React, { FC, useLayoutEffect, useMemo } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
-
-import { MealItem } from "../components";
+import { MealsList } from "../components";
 import { CATEGORIES, MEALS } from "../data/mockup";
 
 type TMealsOverviewProps = {
@@ -32,22 +30,7 @@ const MealsOverviewScreen: FC<TMealsOverviewProps> = ({
     }
   }, [categoryId]);
 
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={mealsList}
-        renderItem={({ item }) => <MealItem item={item} />}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
-  );
+  return <MealsList items={mealsList} />;
 };
 
 export default MealsOverviewScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-  },
-});
