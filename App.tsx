@@ -1,17 +1,23 @@
 import React, { Suspense } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import FavoritesScreen from "./screens/Favorites.screen";
 
 export type RootStackParamList = {
   MealDetails: { mealId: string };
-  MealsCategories: undefined;
+  Categories: undefined;
   MealsOverview: undefined;
+  Drawer: undefined;
+  Favorites: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator<RootStackParamList>();
 
 const CategoriesScreen = React.lazy(
   () => import("./screens/Categories.screen")
@@ -31,35 +37,65 @@ const MyTheme = {
   },
 };
 
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator
+      id={undefined}
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#ffffff",
+        },
+        headerTintColor: "black",
+        drawerContentStyle: {
+          backgroundColor: "#dddddd",
+        },
+      }}
+    >
+      <Drawer.Screen name="Categories" component={CategoriesScreen} />
+      <Drawer.Screen
+        name="Favorites"
+        component={FavoritesScreen}
+        options={{
+          drawerIcon: ({ color, size }) => {
+            return <Ionicons name="star" size={size} color={color} />;
+          },
+        }}
+      />
+    </Drawer.Navigator>
+  );
+};
+
 export default function App() {
   return (
     <>
       <StatusBar style="dark" />
-
       <NavigationContainer theme={MyTheme}>
         <Suspense fallback={<Loader />}>
           <Stack.Navigator
             id={undefined}
             screenOptions={{
-              // cardStyle: { backgroundColor: "transparent" }, // Transparent to let gradient show
               headerStyle: {
-                backgroundColor: "#f2e2a0",
+                backgroundColor: "#ffffff",
               },
               headerTintColor: "black",
             }}
           >
             <Stack.Screen
-              name="MealsCategories"
-              component={CategoriesScreen}
-              options={{
-                title: "All Categories",
-              }}
+              name="Drawer"
+              component={DrawerNavigator}
+              options={{ headerShown: false }}
             />
             <Stack.Screen
               name="MealsOverview"
               component={MealsOverviewScreen}
             />
-            <Stack.Screen name="MealDetails" component={MealDetailsScreen} />
+            <Stack.Screen
+              name="MealDetails"
+              component={MealDetailsScreen}
+              options={{
+                title: "About the Meal",
+              }}
+            />
           </Stack.Navigator>
         </Suspense>
       </NavigationContainer>

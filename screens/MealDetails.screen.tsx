@@ -1,7 +1,7 @@
 import React, { FC, useLayoutEffect, useMemo } from "react";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 
-import { List, MealDetails, Subtitle } from "../components";
+import { IconButton, List, MealDetails, Subtitle } from "../components";
 import { IMeal } from "../models/meal";
 import { MEALS } from "../data/mockup";
 
@@ -24,11 +24,23 @@ const MealDetailsScreen: FC<TMealDetailsScreenProps> = ({
     return MEALS.find((meal) => meal.id === mealId);
   }, [mealId]);
 
+  const headerButtonPressHandler = () => {
+    // Add your logic here
+  };
+
   useLayoutEffect(() => {
-    if (currentMeal?.title) {
-      navigation.setOptions({ title: currentMeal.title });
-    }
-  }, [mealId]);
+    navigation.setOptions({
+      headerRight: () => {
+        return (
+          <IconButton
+            icon="star"
+            color="white"
+            onPress={headerButtonPressHandler}
+          />
+        );
+      },
+    });
+  }, []);
 
   return (
     <ScrollView style={styles.root}>

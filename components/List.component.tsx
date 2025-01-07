@@ -17,11 +17,12 @@ export { List };
 
 const styles = StyleSheet.create({
   listItem: {
-    borderRadius: 6,
+    borderRadius: 8,
     paddingHorizontal: 8,
     paddingVertical: 4,
     marginVertical: 4,
     marginHorizontal: 12,
+    backgroundColor: "#f0f0f0",
   },
   itemText: {
     textAlign: "center",
